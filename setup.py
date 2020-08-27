@@ -43,11 +43,11 @@ CLASSIFIERS = [
 
 
 setup(
-    name='djangocms-video',
+    name='js-video',
     version=__version__,
     author='Divio AG',
     author_email='info@divio.com',
-    url='https://github.com/divio/djangocms-video',
+    url='https://github.com/compoundpartners/js-video',
     license='BSD',
     description='Adds video plugin to django CMS.',
     long_description=open('README.rst').read(),

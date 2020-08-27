@@ -15,6 +15,11 @@ class Form(forms.BaseForm):
         'List of allowed extensions, default "mp4, webm, ogv" when empty (comma separated)',
         required=False,
     )
+    enable_poster = forms.CheckboxField(
+        'Enable Video poster',
+        required=False,
+        initial=False,
+    )
 
     def clean(self):
         data = super(Form, self).clean()
@@ -39,5 +44,6 @@ class Form(forms.BaseForm):
             ]
         if data['extensions']:
             settings['DJANGOCMS_VIDEO_ALLOWED_EXTENSIONS'] = split_and_strip(data['extensions'])
+        settings['DJANGOCMS_VIDEO_ENABLE_POSTER'] = int(data['enable_poster'])
 
         return settings

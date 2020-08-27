@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 from django.utils.translation import ugettext_lazy as _
-
+from django.conf import settings
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
 
 from . import forms, models
 
+ENABLE_POSTER = getattr(settings, "DJANGOCMS_VIDEO_ENABLE_POSTER", False)
 
 class VideoPlayerPlugin(CMSPluginBase):
     model = models.VideoPlayer
@@ -15,26 +16,24 @@ class VideoPlayerPlugin(CMSPluginBase):
     child_classes = ['VideoSourcePlugin', 'VideoTrackPlugin']
     form = forms.VideoPlayerPluginForm
 
+    advanced_fields = [
+        'label',
+        'parameters',
+    ]
+    if ENABLE_POSTER:
+        advanced_fields += ['poster']
+    advanced_fields += ['attributes']
+
     fieldsets = [
         (None, {
             'fields': (
                 'template',
-                'label',
-            )
-        }),
-        (_('Embed video'), {
-            'classes': ('collapse',),
-            'fields': (
                 'embed_link',
-                'parameters',
             )
         }),
         (_('Advanced settings'), {
             'classes': ('collapse',),
-            'fields': (
-                'poster',
-                'attributes',
-            )
+            'fields': advanced_fields
         })
     ]
 
