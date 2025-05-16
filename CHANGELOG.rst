@@ -2,11 +2,35 @@
 Changelog
 =========
 
+3.1.0 (2022-12-07)
+==================
 
-2.x.x
-=====
+What's Changed
+--------------
+* Add GitHub Actions by @crydotsnake in https://github.com/django-cms/djangocms-video/pull/61
+* Add requirement files by @crydotsnake in https://github.com/django-cms/djangocms-video/pull/62
+* Plugin code block must be identifiable by CSS by @macolo in https://github.com/django-cms/djangocms-video/pull/64
+* Create PR template by @Kaushal-Dhungel in https://github.com/django-cms/djangocms-video/pull/65
+* FEATURE: adjust setup metadata by @crydotsnake in https://github.com/django-cms/djangocms-video/pull/67
+* feat: Add migrations for Django 4.2 by @mogoh in https://github.com/django-cms/djangocms-video/pull/73
 
-* Added setting DJANGOCMS_VIDEO_YOUTUBE_EMBED_URL to allow overriding the default canonical YouTube URL
+New Contributors
+----------------
+* @crydotsnake made their first contribution in https://github.com/django-cms/djangocms-video/pull/61
+* @macolo made their first contribution in https://github.com/django-cms/djangocms-video/pull/64
+* @Kaushal-Dhungel made their first contribution in https://github.com/django-cms/djangocms-video/pull/65
+* @mogoh made their first contribution in https://github.com/django-cms/djangocms-video/pull/73
+
+**Full Changelog**: https://github.com/django-cms/djangocms-video/compare/3.0.0...3.1.0
+
+3.0.0 (2020-09-02)
+==================
+
+* Added support for Django 3.1
+* Dropped support for Python 2.7 and Python 3.4
+* Dropped support for Django < 2.2
+* Added setting DJANGOCMS_VIDEO_YOUTUBE_EMBED_URL to allow overriding the
+  default canonical YouTube URL
 
 
 2.3.0 (2020-01-29)

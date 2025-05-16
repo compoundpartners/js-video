@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 import re
 
 from django import forms
 from django.conf import settings
 
 from . import models
-
 
 YOUTUBE_URL_RE = re.compile(r'(?:(?:http://|https://|//)?(?:www\.)?youtu\.?be.*).*')
 # https://stackoverflow.com/a/9102270

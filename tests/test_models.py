@@ -1,10 +1,13 @@
-# -*- coding: utf-8 -*-
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from djangocms_video.models import (
-    VideoPlayer, VideoSource, VideoTrack, get_extensions, get_templates,
+    VideoPlayer,
+    VideoSource,
+    VideoTrack,
+    get_extensions,
+    get_templates,
 )
 
 from .helpers import get_filer_file, get_filer_image

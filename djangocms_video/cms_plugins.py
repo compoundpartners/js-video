@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
-from django.utils.translation import ugettext_lazy as _
-from django.conf import settings
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
+from django.utils.translation import gettext_lazy as _
+from django.conf import settings
 
 from . import forms, models
 
@@ -38,7 +37,7 @@ class VideoPlayerPlugin(CMSPluginBase):
     ]
 
     def render(self, context, instance, placeholder):
-        context = super(VideoPlayerPlugin, self).render(context, instance, placeholder)
+        context = super().render(context, instance, placeholder)
         context['video_template'] = instance.template
         return context
 
