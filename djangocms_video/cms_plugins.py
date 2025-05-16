@@ -6,6 +6,17 @@ from django.conf import settings
 from . import forms, models
 
 ENABLE_POSTER = getattr(settings, "DJANGOCMS_VIDEO_ENABLE_POSTER", False)
+ADVANCED_FIELDS =  {
+    'label': True,
+    'parameters': True,
+    'description': False,
+    'duration': False,
+    'upload_date': False,
+    'poster': ENABLE_POSTER,
+    'attributes': True,
+}
+ADVANCED_FIELDS.update(getattr(settings, "DJANGOCMS_VIDEO_ADVANCED_FIELDS", {}))
+
 
 class VideoPlayerPlugin(CMSPluginBase):
     model = models.VideoPlayer
@@ -19,9 +30,6 @@ class VideoPlayerPlugin(CMSPluginBase):
         'label',
         'parameters',
     ]
-    if ENABLE_POSTER:
-        advanced_fields += ['poster']
-    advanced_fields += ['attributes']
 
     fieldsets = [
         (None, {
@@ -32,7 +40,7 @@ class VideoPlayerPlugin(CMSPluginBase):
         }),
         (_('Advanced settings'), {
             'classes': ('collapse',),
-            'fields': advanced_fields
+            'fields': [field for field, enabled in ADVANCED_FIELDS.items() if enabled]
         })
     ]
 

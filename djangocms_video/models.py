@@ -80,7 +80,21 @@ class VideoPlayer(CMSPlugin):
         verbose_name=_('Attributes'),
         blank=True,
     )
-
+    description = models.TextField(
+        verbose_name=_('Description'),
+        blank=True,
+        null=True,
+    )
+    duration = models.TimeField(
+        verbose_name=_('Duration'),
+        blank=True,
+        null=True,
+    )
+    upload_date = models.DateField(
+        verbose_name=_('Upload Date'),
+        blank=True,
+        null=True,
+    )
     # Add an app namespace to related_name to avoid field name clashes
     # with any other plugins that have a field with the same name as the
     # lowercase of the class name of this model.
