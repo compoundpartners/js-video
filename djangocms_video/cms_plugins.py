@@ -1,5 +1,7 @@
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
+from django.contrib.admin.widgets import AdminTimeWidget
+from django.db.models import TimeField
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 
@@ -17,6 +19,12 @@ ADVANCED_FIELDS =  {
 }
 ADVANCED_FIELDS.update(getattr(settings, "DJANGOCMS_VIDEO_ADVANCED_FIELDS", {}))
 
+class DurationTimeWidget(AdminTimeWidget):
+
+    def __init__(self, attrs=None, format=None):
+        attrs = {"class": "noTimeField", "size": "8", **(attrs or {})}
+        super().__init__(attrs=attrs, format=format)
+
 
 class VideoPlayerPlugin(CMSPluginBase):
     model = models.VideoPlayer
@@ -25,6 +33,9 @@ class VideoPlayerPlugin(CMSPluginBase):
     allow_children = True
     child_classes = ['VideoSourcePlugin', 'VideoTrackPlugin']
     form = forms.VideoPlayerPluginForm
+    formfield_overrides = {
+        TimeField: {"widget": DurationTimeWidget},
+    }
 
     advanced_fields = [
         'label',
