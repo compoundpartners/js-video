@@ -2,6 +2,53 @@
 Changelog
 =========
 
+3.2.0 (2026-10-13)
+==================
+
+Click-to-play poster overlay
+----------------------------
+* Embedded videos (YouTube, Vimeo) now render a poster and a play button, and
+  only load the provider's iframe once the visitor clicks play. This keeps the
+  provider's player payload and cookies off the initial page load.
+* The ``Poster`` field moved out of "Advanced settings" and is shown by
+  default; set ``DJANGOCMS_VIDEO_ENABLE_POSTER = False`` to hide it again.
+* Without an uploaded poster the provider's own thumbnail is used. Disable
+  with ``DJANGOCMS_VIDEO_POSTER_FALLBACK = False``.
+
+Configurable play button
+------------------------
+* New ``DJANGOCMS_VIDEO_PLAY_BUTTON_IMAGE`` and
+  ``DJANGOCMS_VIDEO_PLAY_BUTTON_ICON`` settings set the site-wide button.
+* New per-plugin ``Play button image`` and ``Play button icon`` fields
+  override it for a single video. The icon field uses the ``djangocms_icon``
+  picker when that app is installed, and is a plain text input otherwise.
+
+Other changes
+-------------
+* Provider detection moved from the browser into ``providers.py``. It is based
+  on the host rather than the length of the video id, which misidentified
+  11 digit Vimeo ids as YouTube ids.
+* YouTube posters now fall back from ``maxresdefault`` to ``hqdefault``
+  instead of showing a broken image for videos never published above 720p.
+* The play button is a real ``<button>`` with an accessible label, and the
+  iframe now carries a ``title``; both were previously missing.
+* The Attributes and Parameters fields are applied to the deferred iframe.
+* Embeds are forced to https. Upstream canonicalises YouTube to the protocol
+  relative ``//www.youtube.com/embed/{id}``, which resolves to http on a site
+  served over http and is then blocked by a scheme specific CSP ``frame-src``.
+* The player is inserted before the poster is torn down, so a third party
+  MutationObserver that throws cannot leave the plugin empty.
+* Vimeo page URLs are rewritten to player URLs on save, as YouTube URLs
+  already were. Unlisted video hashes are preserved.
+* The player markup moved to ``djangocms_video/includes/video_player.html`` so
+  that a site can wrap it without copying it.
+* Ships ``static/djangocms_video/{css,js}`` for the facade. The template
+  registers them through sekizai, which is already a django-cms dependency and
+  is now declared explicitly.
+* Merged upstream ``djangocms-video`` master (5 commits, no new migrations),
+  picking up its pyproject packaging, ruff config and django CMS 5.1 test
+  matrix. The distribution name stays ``js-video``.
+
 3.1.0 (2022-12-07)
 ==================
 

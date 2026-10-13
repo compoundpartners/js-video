@@ -46,6 +46,9 @@ dependencies = [
     "django-cms>=3.11",
     "django-filer>=2.2",
     "djangocms-attributes-field>=1",
+    # Used directly by the player template to register its CSS and JS.
+    # Already a django-cms dependency; declared here because we import it.
+    "django-sekizai",
 ]
 
 [tool.setuptools.packages.find]

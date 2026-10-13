@@ -16,6 +16,9 @@ INSTALLED_APPS = [
     "cms",
     "menus",
     "treebeard",
+    # The player template registers its CSS and JS through sekizai. It is a
+    # hard dependency of django-cms, so it is always present in a real site.
+    "sekizai",
     "djangocms_video",
 ]
 
