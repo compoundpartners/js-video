@@ -1,23 +1,38 @@
 from cms.plugin_base import CMSPluginBase
 from cms.plugin_pool import plugin_pool
+from django.conf import settings
 from django.contrib.admin.widgets import AdminTimeWidget
 from django.db.models import TimeField
 from django.utils.translation import gettext_lazy as _
-from django.conf import settings
 
 from . import forms, models
 
-ENABLE_POSTER = getattr(settings, "DJANGOCMS_VIDEO_ENABLE_POSTER", False)
-ADVANCED_FIELDS =  {
+# The poster drives the click-to-play overlay, so it belongs with the embed
+# link rather than hidden under "Advanced settings".
+ENABLE_POSTER = getattr(settings, "DJANGOCMS_VIDEO_ENABLE_POSTER", True)
+MAIN_FIELDS = ['template', 'embed_link']
+if ENABLE_POSTER:
+    MAIN_FIELDS.append('poster')
+
+ADVANCED_FIELDS = {
     'label': True,
     'parameters': True,
     'description': False,
     'duration': False,
     'upload_date': False,
-    'poster': ENABLE_POSTER,
+    'poster': False,
+    'play_button_image': True,
+    'play_button_icon': True,
     'attributes': True,
 }
 ADVANCED_FIELDS.update(getattr(settings, "DJANGOCMS_VIDEO_ADVANCED_FIELDS", {}))
+
+# A site may still choose to show the poster under "Advanced settings"; make
+# sure that does not list it in two fieldsets, which the admin rejects.
+ADVANCED_FIELD_NAMES = [
+    field for field, enabled in ADVANCED_FIELDS.items()
+    if enabled and field not in MAIN_FIELDS
+]
 
 class DurationTimeWidget(AdminTimeWidget):
 
@@ -44,14 +59,11 @@ class VideoPlayerPlugin(CMSPluginBase):
 
     fieldsets = [
         (None, {
-            'fields': (
-                'template',
-                'embed_link',
-            )
+            'fields': MAIN_FIELDS
         }),
         (_('Advanced settings'), {
             'classes': ('collapse',),
-            'fields': [field for field, enabled in ADVANCED_FIELDS.items() if enabled]
+            'fields': ADVANCED_FIELD_NAMES
         })
     ]
 

@@ -97,6 +97,69 @@ The canonical URL can be reconfigured with a configuration setting::
 
     DJANGOCMS_VIDEO_YOUTUBE_EMBED_URL = '//www.youtube-nocookie.com/embed/{}'
 
+Vimeo URLs are canonicalized the same way, to `//player.vimeo.com/video/{}`.
+An unlisted video's hash is preserved as an ``h`` query parameter::
+
+    DJANGOCMS_VIDEO_VIMEO_EMBED_URL = '//player.vimeo.com/video/{}'
+
+Poster overlay
+--------------
+
+An embedded video is not loaded until the visitor clicks play. Until then the
+plugin renders the ``Poster`` image with a play button over it. This keeps the
+provider's player payload and cookies off the initial page load.
+
+The ``Poster`` field is shown next to the embed link by default. To hide it::
+
+    DJANGOCMS_VIDEO_ENABLE_POSTER = False
+
+When no poster has been uploaded the provider's own thumbnail is used
+(``i.ytimg.com`` for YouTube, ``vumbnail.com`` for Vimeo). Those hosts need
+allowing in a ``img-src`` content security policy. Unlisted and password
+protected Vimeo videos have no public thumbnail, so they need a poster
+uploading. To never request a provider thumbnail::
+
+    DJANGOCMS_VIDEO_POSTER_FALLBACK = False
+
+Play button
+-----------
+
+With nothing configured the stylesheet draws a plain triangle. A site-wide
+button can be set as either an image or an icon::
+
+    # a path resolved by staticfiles, or a ready-made URL
+    DJANGOCMS_VIDEO_PLAY_BUTTON_IMAGE = 'img/icons/play.png'
+
+    # a Font Awesome class; "<class> <color> <size in px>" is also accepted
+    DJANGOCMS_VIDEO_PLAY_BUTTON_ICON = 'fas fa-play #ffffff 48'
+
+Editors can override that per video with the ``Play button image`` and
+``Play button icon`` fields under "Advanced settings". The most specific
+setting wins: the plugin's image, then the plugin's icon, then the site-wide
+image, then the site-wide icon.
+
+When ``djangocms_icon`` is in ``INSTALLED_APPS`` the icon fields use its
+picker widget. Without it they are plain text inputs and the value is used
+verbatim as a CSS class.
+
+Overriding the markup
+---------------------
+
+The player markup lives in ``djangocms_video/includes/video_player.html``.
+A site that needs to wrap it, for example to emit schema.org data or to add a
+layout class, should override ``djangocms_video/<template>/video_player.html``
+and include that partial rather than copying the player::
+
+    {% load sekizai_tags %}
+
+    {% addtoblock "plugins_schema" %}
+        {% include "myapp/video_schema.html" %}
+    {% endaddtoblock %}
+
+    <div class="video-player">
+        {% include "djangocms_video/includes/video_player.html" %}
+    </div>
+
 Running Tests
 -------------
 

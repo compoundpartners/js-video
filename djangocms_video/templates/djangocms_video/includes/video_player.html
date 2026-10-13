@@ -1,0 +1,49 @@
+{% load i18n cms_tags sekizai_tags static %}
+
+{% addtoblock "css" %}<link rel="stylesheet" href="{% static 'djangocms_video/css/video-facade.css' %}">{% endaddtoblock %}
+{% addtoblock "js" %}<script src="{% static 'djangocms_video/js/video-facade.js' %}" defer></script>{% endaddtoblock %}
+
+{% if instance.embed_link %}
+    {% comment %}
+        The provider's iframe is not loaded until the visitor clicks play, so
+        its payload and its cookies stay off the initial page load.
+    {% endcomment %}
+    <div class="djangocms-video-facade"
+        data-video-src="{{ instance.autoplay_embed_link }}"
+        data-video-title="{{ instance.iframe_title }}"
+        data-video-attributes="{{ instance.attributes_json }}">
+        {% if instance.poster_url %}
+            <img class="djangocms-video-facade__poster"
+                src="{{ instance.poster_url }}"
+                alt="{{ instance.poster_alt }}"
+                {% if instance.poster_fallback_urls %}data-fallback-src="{{ instance.poster_fallback_urls|join:" " }}"{% endif %}
+                loading="lazy">
+        {% endif %}
+        <button type="button"
+            class="djangocms-video-facade__play{% if not instance.play_button_image_url and not instance.play_button_icon_class %} djangocms-video-facade__play--default{% endif %}"
+            aria-label="{{ instance.play_button_label }}">
+            {% if instance.play_button_image_url %}
+                <img src="{{ instance.play_button_image_url }}" alt="">
+            {% elif instance.play_button_icon_class %}
+                <i class="{{ instance.play_button_icon_class }}" aria-hidden="true"{% if instance.play_button_icon_style %} style="{{ instance.play_button_icon_style }}"{% endif %}></i>
+            {% endif %}
+        </button>
+        <noscript>
+            <iframe src="{{ instance.secure_embed_link }}" title="{{ instance.iframe_title }}" {{ instance.attributes_str }} frameborder="0" allowfullscreen="true" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </noscript>
+    </div>
+    {% with disabled=instance.embed_link %}
+        {% for plugin in instance.child_plugin_instances %}
+            {% render_plugin plugin %}
+        {% endfor %}
+    {% endwith %}
+{% else %}
+    {# render <source> or <track> plugins #}
+    <video controls {{ instance.attributes_str }}
+        {% if instance.poster %} poster="{{ instance.poster.url }}"{% endif %}>
+        {% for plugin in instance.child_plugin_instances %}
+            {% render_plugin plugin %}
+        {% endfor %}
+        {% trans "Your browser doesn't support this video format." %}
+    </video>
+{% endif %}

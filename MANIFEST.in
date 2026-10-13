@@ -1,5 +1,6 @@
 include LICENSE
 include README.rst
 recursive-include djangocms_video/locale *
+recursive-include djangocms_video/static *
 recursive-include djangocms_video/templates *
 recursive-exclude * *.py[co]
