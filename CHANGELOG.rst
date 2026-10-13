@@ -2,6 +2,17 @@
 Changelog
 =========
 
+3.2.1 (2026-10-13)
+==================
+
+* The facade no longer lets the Attributes field set security relevant
+  attributes on the player. ``on...`` handlers would run as inline script and
+  sidestep a CSP nonce, ``allow`` delegates permissions such as camera and
+  microphone to the third party frame, and ``src``/``srcdoc`` would repoint
+  the player. The field has no ``excluded_keys``, so anything can be stored in
+  it; it is now filtered at render. The remaining attributes are applied
+  before the player's own defaults so those defaults always win.
+
 3.2.0 (2026-10-13)
 ==================
 

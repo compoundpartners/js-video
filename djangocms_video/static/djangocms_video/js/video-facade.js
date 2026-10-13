@@ -45,6 +45,16 @@
         });
     }
 
+    /*
+     * Attributes the editor must not be able to set on the player.
+     *
+     * The Attributes field has no excluded_keys, so anything can be stored in
+     * it. An "on..." handler would run as inline script, which sidesteps the
+     * CSP nonce; "allow" delegates permissions such as camera and microphone
+     * to the third party frame; "src" and "srcdoc" would repoint the player.
+     */
+    var BLOCKED_ATTRIBUTES = /^(on|src$|srcdoc$|allow$|sandbox$|referrerpolicy$)/i;
+
     function editorAttributes(facade) {
         var raw = facade.getAttribute('data-video-attributes');
         if (!raw) {
@@ -69,14 +79,20 @@
         var attributes = editorAttributes(facade);
         var name;
 
+        // Editor attributes first, so that the defaults below always win.
+        for (name in attributes) {
+            if (!Object.prototype.hasOwnProperty.call(attributes, name)) {
+                continue;
+            }
+            if (BLOCKED_ATTRIBUTES.test(name)) {
+                warn('ignoring unsafe attribute "' + name + '"', facade);
+                continue;
+            }
+            iframe.setAttribute(name, attributes[name]);
+        }
         for (name in IFRAME_ATTRIBUTES) {
             if (Object.prototype.hasOwnProperty.call(IFRAME_ATTRIBUTES, name)) {
                 iframe.setAttribute(name, IFRAME_ATTRIBUTES[name]);
-            }
-        }
-        for (name in attributes) {
-            if (Object.prototype.hasOwnProperty.call(attributes, name)) {
-                iframe.setAttribute(name, attributes[name]);
             }
         }
         iframe.setAttribute('src', src);
